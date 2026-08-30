@@ -1,7 +1,8 @@
 import SwiftUI
+import ChessUIKit
 
 @main
-struct ChessUI: App {
+struct ChessUIMac: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -1,10 +1,12 @@
 import SwiftUI
 import ChessEngineKit
 
-struct ContentView: View {
+public struct ContentView: View {
     @StateObject private var vm = ChessViewModel()
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         HStack(alignment: .top, spacing: 16) {
             BoardView(vm: vm)
             SidePanel(vm: vm)
@@ -66,6 +68,16 @@ struct SidePanel: View {
                 )
             }
 
+            Divider()
+
+            Picker("Board size", selection: $vm.boardSize) {
+                ForEach(BoardSize.allCases) { s in
+                    Text(s.rawValue).tag(s)
+                }
+            }
+
+            Toggle("Show coordinates", isOn: $vm.showCoordinates)
+
             HStack {
                 Button("New Game") { vm.reload() }
                 Button(vm.thinking ? "Thinking…" : "AI Move") {
@@ -118,11 +130,10 @@ struct PromotionButton: View {
     let kind: PieceKind
 
     var body: some View {
-        Button(action: { vm.choosePromotion(kind) }) {
-            let side = vm.state?.turn ?? .white
-            Text(vm.glyph(for: side, kind))
-                .font(.system(size: 44))
-        }
+            Button(action: { vm.choosePromotion(kind) }) {
+                let side = vm.state?.turn ?? .white
+                PieceSymbol(glyph: vm.glyph(for: side, kind), side: side, size: 44)
+            }
         .buttonStyle(PlainButtonStyle())
     }
 }

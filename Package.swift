@@ -3,9 +3,10 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftChess",
-    platforms: [.macOS(.v13)],
+    platforms: [.macOS(.v13), .iOS(.v14)],
     products: [
         .library(name: "SwiftChess", targets: ["SwiftChess"]),
+        .library(name: "ChessUIKit", targets: ["ChessUIKit"]),
         .executable(name: "ChessUI", targets: ["ChessUI"]),
     ],
     targets: [
@@ -21,9 +22,14 @@ let package = Package(
             name: "EngineFFI",
             path: "Frameworks/ChessEngineKitFFI.xcframework"
         ),
+        .target(
+            name: "ChessUIKit",
+            dependencies: ["SwiftChess", "ChessEngineKit"],
+            path: "Sources/ChessUIKit"
+        ),
         .executableTarget(
             name: "ChessUI",
-            dependencies: ["SwiftChess", "ChessEngineKit"],
+            dependencies: ["ChessUIKit"],
             path: "Sources/ChessUI"
         ),
         .testTarget(

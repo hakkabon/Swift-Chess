@@ -4,7 +4,29 @@ import SwiftChess
 enum GameMode: String, CaseIterable, Identifiable {
     case humanVsAI = "Human vs AI"
     case humanVsHuman = "Human vs Human"
+    case computerVsComputer = "Computer vs Computer"
     var id: String { rawValue }
+}
+
+enum BoardSize: String, CaseIterable, Identifiable {
+    case small = "Small"
+    case medium = "Medium"
+    case large = "Large"
+    var id: String { rawValue }
+    var cell: CGFloat {
+        switch self {
+        case .small: return 40
+        case .medium: return 52
+        case .large: return 68
+        }
+    }
+    var font: CGFloat {
+        switch self {
+        case .small: return 26
+        case .medium: return 34
+        case .large: return 44
+        }
+    }
 }
 
 @MainActor
@@ -23,6 +45,8 @@ class ChessViewModel: ObservableObject {
     @Published var mode: GameMode = .humanVsAI
     @Published var humanColor: Side = .white
     @Published var depth: UInt8 = 3
+    @Published var boardSize: BoardSize = .medium
+    @Published var showCoordinates: Bool = true
 
     // Squares in top-left -> bottom-right display order.
     let displayOrder: [UInt8]
@@ -103,6 +127,7 @@ class ChessViewModel: ObservableObject {
     func squareTapped(_ sq: UInt8) {
         guard !thinking, !gameOver else { return }
         if mode == .humanVsAI, state?.turn != humanColor { return }
+        if mode == .computerVsComputer { return }
 
         if let sel = selected {
             if sel == sq {
@@ -153,6 +178,7 @@ class ChessViewModel: ObservableObject {
     var canRequestAI: Bool {
         if gameOver { return false }
         if mode == .humanVsHuman { return true }
+        if mode == .computerVsComputer { return true }
         return state?.turn != humanColor
     }
 
@@ -186,17 +212,25 @@ class ChessViewModel: ObservableObject {
         if mode == .humanVsHuman, !force { return }
         guard let s = state else { return }
         let aiToMove: Bool
-        if mode == .humanVsHuman {
+        switch mode {
+        case .humanVsHuman:
             aiToMove = force
-        } else {
+        case .humanVsAI:
             aiToMove = s.turn != humanColor
+        case .computerVsComputer:
+            aiToMove = true
         }
         guard aiToMove else { return }
 
         thinking = true
         let game = self.game
         let depth = self.depth
-        Task.detached(priority: .userInitiated) { [game, depth] in
+        let isCvC = (mode == .computerVsComputer)
+        Task.detached(priority: .userInitiated) { [game, depth, isCvC] in
+            // In Computer vs Computer give the viewer a beat between plies.
+            if isCvC {
+                try? await Task.sleep(nanoseconds: 350_000_000)
+            }
             let mv = try? game.aiMove(depth: depth)
             await MainActor.run {
                 self.thinking = false
@@ -225,10 +259,10 @@ class ChessViewModel: ObservableObject {
     }
 
     func glyph(for side: Side, _ kind: PieceKind) -> String {
-        let white = ["♙", "♘", "♗", "♖", "♕", "♔"]
-        let black = ["♟", "♞", "♝", "♜", "♛", "♚"]
-        let idx = kindIndex(kind)
-        return side == .white ? white[idx] : black[idx]
+        // Always use the solid (filled) chess glyphs; the side only changes the
+        // tint, so pieces render as fully opaque black/white with no transparency.
+        let solid = ["♟", "♞", "♝", "♜", "♛", "♚"]
+        return solid[kindIndex(kind)]
     }
 
     private func kindIndex(_ kind: PieceKind) -> Int {
