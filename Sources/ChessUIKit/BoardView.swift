@@ -20,8 +20,8 @@ struct PieceSymbol: View {
         case .queen: base = "queen"
         case .king: base = "king"
         }
-        // Image set names in the catalog: pawn_white, pawn_black, etc.
-        return base + (side == .white ? "_white" : "_black")
+        // Image set names in the catalog: pawn-white, pawn-black, etc.
+        return base + (side == .white ? "-white" : "-black")
     }
 
     var body: some View {
