@@ -2,7 +2,9 @@ import SwiftUI
 import ChessEngineKit
 
 /// A chess piece rendered from the vector asset catalog (`Assets.xcassets`).
-/// Uses pre-colored PDFs (white/black) — no runtime tinting.
+/// The catalog contains black-filled PDFs; we use template rendering to tint them
+/// pure white or black, with a thin contrasting outline for legibility on both
+/// square colors. Fully opaque, no transparency, scales crisply.
 struct PieceSymbol: View {
     let kind: PieceKind
     let side: Side
@@ -18,19 +20,66 @@ struct PieceSymbol: View {
         case .queen: base = "queen"
         case .king: base = "king"
         }
-        // Expect separate image sets per color, e.g. "pawn_white", "pawn_black"
-        let suffix = side == .white ? "_white" : "_black"
-        return base + suffix
+        // Image set names in the catalog: pawn_white, pawn_black, etc.
+        return base + (side == .white ? "_white" : "_black")
     }
 
     var body: some View {
-        Image(asset, bundle: .module)
-            .resizable()
-            .interpolation(.high)
-            .aspectRatio(contentMode: .fit)
-            .frame(width: size, height: size)
+        let isWhite = side == .white
+        ZStack {
+            Image(asset, bundle: .module)
+                .renderingMode(.template)
+                .resizable()
+                .interpolation(.high)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size * 1.12, height: size * 1.12)
+                .foregroundColor(isWhite ? .black : .white)
+            Image(asset, bundle: .module)
+                .renderingMode(.template)
+                .resizable()
+                .interpolation(.high)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size, height: size)
+                .foregroundColor(isWhite ? .white : .black)
+        }
     }
 }
+
+#if DEBUG
+/// Preview-friendly piece symbol that falls back to Unicode glyphs when
+/// `Bundle.module` is unavailable (e.g., in SwiftUI previews).
+struct PreviewPieceSymbol: View {
+    let kind: PieceKind
+    let side: Side
+    let size: CGFloat
+
+    private var glyph: String {
+        let solid = ["♟", "♞", "♝", "♜", "♛", "♚"]
+        let idx: Int
+        switch kind {
+        case .pawn: idx = 0
+        case .knight: idx = 1
+        case .bishop: idx = 2
+        case .rook: idx = 3
+        case .queen: idx = 4
+        case .king: idx = 5
+        }
+        return solid[idx]
+    }
+
+    var body: some View {
+        let isWhite = side == .white
+        ZStack {
+            Text(glyph)
+                .font(.system(size: size * 1.12))
+                .foregroundColor(isWhite ? .black : .white)
+            Text(glyph)
+                .font(.system(size: size))
+                .foregroundColor(isWhite ? .white : .black)
+        }
+    }
+}
+#endif
 
 struct BoardView: View {
     @ObservedObject var vm: ChessViewModel
