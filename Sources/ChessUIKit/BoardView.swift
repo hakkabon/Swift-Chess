@@ -2,43 +2,33 @@ import SwiftUI
 import ChessEngineKit
 
 /// A chess piece rendered from the vector asset catalog (`Assets.xcassets`).
-/// The artwork is a single-color silhouette; we tint it pure white or black and
-/// draw a thin contrasting outline so pieces stay legible on both square colors
-/// and remain fully opaque (no transparency).
+/// Uses pre-colored PDFs (white/black) — no runtime tinting.
 struct PieceSymbol: View {
     let kind: PieceKind
     let side: Side
     let size: CGFloat
 
     private var asset: String {
+        let base: String
         switch kind {
-        case .pawn: return "piece_pawn"
-        case .knight: return "piece_knight"
-        case .bishop: return "piece_bishop"
-        case .rook: return "piece_rook"
-        case .queen: return "piece_queen"
-        case .king: return "piece_king"
+        case .pawn: base = "piece_pawn"
+        case .knight: base = "piece_knight"
+        case .bishop: base = "piece_bishop"
+        case .rook: base = "piece_rook"
+        case .queen: base = "piece_queen"
+        case .king: base = "piece_king"
         }
+        // Expect separate image sets per color, e.g. "piece_pawn_white", "piece_pawn_black"
+        let suffix = side == .white ? "_white" : "_black"
+        return base + suffix
     }
 
     var body: some View {
-        let isWhite = side == .white
-        ZStack {
-            Image(asset, bundle: .module)
-                .renderingMode(.template)
-                .resizable()
-                .interpolation(.high)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: size * 1.12, height: size * 1.12)
-                .foregroundColor(isWhite ? .black : .white)
-            Image(asset, bundle: .module)
-                .renderingMode(.template)
-                .resizable()
-                .interpolation(.high)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: size, height: size)
-                .foregroundColor(isWhite ? .white : .black)
-        }
+        Image(asset, bundle: .module)
+            .resizable()
+            .interpolation(.high)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: size, height: size)
     }
 }
 
@@ -49,7 +39,66 @@ struct BoardView: View {
         let cell = vm.boardSize.cell
         let step = cell + 2 // cell + inter-cell spacing
 
-        return VStack(spacing: 2) {
+        return VStack(spacing: 0) {
+            // Top spacer for alignment with left rank labels
+            HStack(spacing: 0) {
+                rankLabelsColumn(cell: cell, step: step)
+                    .padding(.leading, 8) // match board's left padding
+                boardGrid(cell: cell, step: step)
+                    .padding(8)
+                    .background(Color.black.opacity(0.85))
+                    .cornerRadius(10)
+            }
+            // Bottom file labels
+            fileLabelsRow(cell: cell, step: step)
+                .padding(.leading, 8 + labelColumnWidth(cell)) // align with board
+        }
+        .overlay(
+            // Floating piece that follows the finger during a drag.
+            Group {
+                if let drag = vm.dragPiece {
+                    PieceSymbol(kind: drag.1, side: drag.0, size: cell * 0.75)
+                        .position(x: vm.dragPoint.x + labelColumnWidth(cell) + 8,
+                                  y: vm.dragPoint.y + 8)
+                }
+            }
+        )
+    }
+
+    private func labelColumnWidth(_ cell: CGFloat) -> CGFloat {
+        20 // fixed width for rank labels
+    }
+
+    @ViewBuilder
+    private func rankLabelsColumn(cell: CGFloat, step: CGFloat) -> some View {
+        VStack(spacing: 2) {
+            ForEach(0..<8, id: \.self) { row in
+                // displayOrder: row 0 = rank 8 (top), row 7 = rank 1 (bottom)
+                let rank = 8 - row
+                Text("\(rank)")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.primary.opacity(0.7))
+                    .frame(width: labelColumnWidth(cell), height: cell, alignment: .center)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func fileLabelsRow(cell: CGFloat, step: CGFloat) -> some View {
+        HStack(spacing: 2) {
+            ForEach(0..<8, id: \.self) { col in
+                let file = String(UnicodeScalar(97 + col)!)
+                Text(file)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.primary.opacity(0.7))
+                    .frame(width: cell, height: 20, alignment: .center)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func boardGrid(cell: CGFloat, step: CGFloat) -> some View {
+        VStack(spacing: 2) {
             ForEach(0..<8, id: \.self) { row in
                 HStack(spacing: 2) {
                     ForEach(0..<8, id: \.self) { col in
@@ -60,18 +109,6 @@ struct BoardView: View {
                 }
             }
         }
-        .padding(8)
-        .background(Color.black.opacity(0.85))
-        .cornerRadius(10)
-        .overlay(
-            // Floating piece that follows the finger during a drag.
-            Group {
-                if let drag = vm.dragPiece {
-                    PieceSymbol(kind: drag.1, side: drag.0, size: cell * 0.75)
-                        .position(x: vm.dragPoint.x, y: vm.dragPoint.y)
-                }
-            }
-        )
     }
 }
 
