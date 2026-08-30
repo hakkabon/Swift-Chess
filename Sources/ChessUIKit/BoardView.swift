@@ -135,8 +135,6 @@ struct CellView: View {
         let isLast = vm.lastFrom == sq || vm.lastTo == sq
         let isTarget = vm.legalTargets.contains { $0.toSquare == sq }
         let piece = vm.board[sq]
-        let file = Int(sq) % 8
-        let rank = Int(sq) / 8
 
         let drag = DragGesture(minimumDistance: 4)
             .onChanged { value in
