@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "piece_queen.pdf",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "Queen.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

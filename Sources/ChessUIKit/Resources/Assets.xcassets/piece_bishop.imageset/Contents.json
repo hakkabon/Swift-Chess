@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "piece_bishop.pdf",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "Bishop.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

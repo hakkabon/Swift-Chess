@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "piece_knight.pdf",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "Knight.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

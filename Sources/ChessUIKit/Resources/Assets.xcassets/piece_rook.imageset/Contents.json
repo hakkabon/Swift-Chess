@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "piece_rook.pdf",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "Rook.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

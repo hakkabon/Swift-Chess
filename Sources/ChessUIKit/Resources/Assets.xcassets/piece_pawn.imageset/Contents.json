@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "piece_pawn.pdf",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename" : "Pawn.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {
