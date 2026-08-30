@@ -103,9 +103,9 @@ Macs (no x86_64 iOS simulator slice is shipped).
     you can watch), stopping at checkmate/stalemate/draw.
 - **Three board sizes** (Small / Medium / Large) — a picker scales every square
   and piece glyph.
-- **Crisp vector piece artwork** — pieces are drawn from a vector
-  `Assets.xcassets` catalog (single-color silhouettes tinted black/white with a
-  contrasting outline), so they stay sharp at any size and fill ~75% of a square.
+- **Crisp vector piece artwork** — black and white pieces are drawn directly
+  from their matching PDFs in `Assets.xcassets`, using each asset's original
+  colors and preserved vector representation.
 - **Drag & drop** — grab a piece and drop it on a (legal) square to move it; tap
   selection still works as an alternative.
 - **Optional coordinate labels** — toggle the file letters (`a`–`h`) along the

@@ -1,10 +1,14 @@
 import SwiftUI
 import ChessEngineKit
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
-/// A chess piece rendered from the vector asset catalog (`Assets.xcassets`).
-/// The catalog contains black-filled PDFs; we use template rendering to tint them
-/// pure white or black, with a thin contrasting outline for legibility on both
-/// square colors. Fully opaque, no transparency, scales crisply.
+/// A chess piece rendered from the matching black or white PDF in
+/// `Assets.xcassets`. The artwork supplies its own colors, so it must be loaded
+/// using original rendering rather than being converted into a tinted template.
 struct PieceSymbol: View {
     let kind: PieceKind
     let side: Side
@@ -24,24 +28,45 @@ struct PieceSymbol: View {
         return base + (side == .white ? "-white" : "-black")
     }
 
+    private var pdfURL: URL? {
+        let directory = "Assets.xcassets/\(asset).imageset"
+        guard let resourceURL = Bundle.module.resourceURL,
+              let files = try? FileManager.default.contentsOfDirectory(
+                  at: resourceURL.appendingPathComponent(directory),
+                  includingPropertiesForKeys: nil
+              )
+        else { return nil }
+        return files.first { $0.pathExtension.lowercased() == "pdf" }
+    }
+
+    @ViewBuilder
     var body: some View {
-        let isWhite = side == .white
-        ZStack {
-            Image(asset, bundle: .module)
-                .renderingMode(.template)
-                .resizable()
-                .interpolation(.high)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: size * 1.12, height: size * 1.12)
-                .foregroundColor(isWhite ? .black : .white)
-            Image(asset, bundle: .module)
-                .renderingMode(.template)
-                .resizable()
-                .interpolation(.high)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: size, height: size)
-                .foregroundColor(isWhite ? .white : .black)
+        pieceImage
+            .renderingMode(.original)
+            .resizable()
+            .interpolation(.high)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: size, height: size)
+    }
+
+    private var pieceImage: Image {
+#if os(macOS)
+        if let image = Bundle.module.image(forResource: NSImage.Name(asset)) {
+            return Image(nsImage: image)
         }
+        if let pdfURL, let image = NSImage(contentsOf: pdfURL) {
+            return Image(nsImage: image)
+        }
+#else
+        if let image = UIImage(named: asset, in: .module, compatibleWith: nil) {
+            return Image(uiImage: image)
+        }
+        if let pdfURL, let image = UIImage(contentsOfFile: pdfURL.path) {
+            return Image(uiImage: image)
+        }
+#endif
+        // This also provides a useful missing-asset indicator in development.
+        return Image(systemName: "questionmark.square.dashed")
     }
 }
 
