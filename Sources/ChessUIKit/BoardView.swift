@@ -38,27 +38,34 @@ struct BoardView: View {
     var body: some View {
         let cell = vm.boardSize.cell
         let step = cell + 2 // cell + inter-cell spacing
+        let labelWidth = max(20, cell * 0.3) // scales with board size
+        let labelFont = max(10, cell * 0.18)
+        let fileLabelHeight = max(16, cell * 0.25)
 
         return VStack(spacing: 0) {
             // Top spacer for alignment with left rank labels
             HStack(spacing: 0) {
-                rankLabelsColumn(cell: cell, step: step)
-                    .padding(.leading, 8) // match board's left padding
+                if vm.showCoordinates {
+                    rankLabelsColumn(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont)
+                        .padding(.leading, 8)
+                }
                 boardGrid(cell: cell, step: step)
                     .padding(8)
                     .background(Color.black.opacity(0.85))
                     .cornerRadius(10)
             }
             // Bottom file labels
-            fileLabelsRow(cell: cell, step: step)
-                .padding(.leading, 8 + labelColumnWidth(cell)) // align with board
+            if vm.showCoordinates {
+                fileLabelsRow(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont, fileLabelHeight: fileLabelHeight)
+                    .padding(.leading, 8 + labelWidth)
+            }
         }
         .overlay(
             // Floating piece that follows the finger during a drag.
             Group {
                 if let drag = vm.dragPiece {
                     PieceSymbol(kind: drag.1, side: drag.0, size: cell * 0.75)
-                        .position(x: vm.dragPoint.x + labelColumnWidth(cell) + 8,
+                        .position(x: vm.dragPoint.x + (vm.showCoordinates ? labelWidth + 8 : 8),
                                   y: vm.dragPoint.y + 8)
                 }
             }
@@ -66,32 +73,31 @@ struct BoardView: View {
     }
 
     private func labelColumnWidth(_ cell: CGFloat) -> CGFloat {
-        20 // fixed width for rank labels
+        max(20, cell * 0.3)
     }
 
     @ViewBuilder
-    private func rankLabelsColumn(cell: CGFloat, step: CGFloat) -> some View {
+    private func rankLabelsColumn(cell: CGFloat, step: CGFloat, labelWidth: CGFloat, labelFont: CGFloat) -> some View {
         VStack(spacing: 2) {
             ForEach(0..<8, id: \.self) { row in
-                // displayOrder: row 0 = rank 8 (top), row 7 = rank 1 (bottom)
                 let rank = 8 - row
                 Text("\(rank)")
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: labelFont, weight: .medium))
                     .foregroundColor(.primary.opacity(0.7))
-                    .frame(width: labelColumnWidth(cell), height: cell, alignment: .center)
+                    .frame(width: labelWidth, height: cell, alignment: .center)
             }
         }
     }
 
     @ViewBuilder
-    private func fileLabelsRow(cell: CGFloat, step: CGFloat) -> some View {
+    private func fileLabelsRow(cell: CGFloat, step: CGFloat, labelWidth: CGFloat, labelFont: CGFloat, fileLabelHeight: CGFloat) -> some View {
         HStack(spacing: 2) {
             ForEach(0..<8, id: \.self) { col in
                 let file = String(UnicodeScalar(97 + col)!)
                 Text(file)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: labelFont, weight: .medium))
                     .foregroundColor(.primary.opacity(0.7))
-                    .frame(width: cell, height: 20, alignment: .center)
+                    .frame(width: cell, height: fileLabelHeight, alignment: .center)
             }
         }
     }
@@ -164,22 +170,6 @@ struct CellView: View {
                 Circle()
                     .fill(Color.green.opacity(0.6))
                     .frame(width: 16, height: 16)
-            }
-            if vm.showCoordinates {
-                if rank == 0 {
-                    Text(String(UnicodeScalar(97 + file)!))
-                        .font(.system(size: 10))
-                        .foregroundColor(isLight ? .black.opacity(0.6) : .white.opacity(0.75))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        .padding(3)
-                }
-                if file == 0 {
-                    Text(String(rank + 1))
-                        .font(.system(size: 10))
-                        .foregroundColor(isLight ? .black.opacity(0.6) : .white.opacity(0.75))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        .padding(3)
-                }
             }
         }
         .frame(width: cell, height: cell)
