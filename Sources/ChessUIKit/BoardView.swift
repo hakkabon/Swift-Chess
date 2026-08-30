@@ -45,20 +45,19 @@ struct BoardView: View {
         return VStack(spacing: 0) {
             // Top spacer for alignment with left rank labels
             HStack(spacing: 0) {
-                if vm.showCoordinates {
-                    rankLabelsColumn(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont)
-                        .padding(.leading, 8)
-                }
+                rankLabelsColumn(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont)
+                    .padding(.leading, 8)
+                    .opacity(vm.showCoordinates ? 1 : 0)
+                    .frame(width: labelWidth, alignment: .center)
                 boardGrid(cell: cell, step: step)
                     .padding(8)
                     .background(Color.black.opacity(0.85))
                     .cornerRadius(10)
             }
             // Bottom file labels
-            if vm.showCoordinates {
-                fileLabelsRow(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont, fileLabelHeight: fileLabelHeight)
-                    .padding(.leading, 8 + labelWidth)
-            }
+            fileLabelsRow(cell: cell, step: step, labelWidth: labelWidth, labelFont: labelFont, fileLabelHeight: fileLabelHeight)
+                .padding(.leading, 8 + labelWidth)
+                .opacity(vm.showCoordinates ? 1 : 0)
         }
         .overlay(
             // Floating piece that follows the finger during a drag.
