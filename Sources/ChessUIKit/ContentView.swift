@@ -132,7 +132,7 @@ struct PromotionButton: View {
     var body: some View {
             Button(action: { vm.choosePromotion(kind) }) {
                 let side = vm.state?.turn ?? .white
-                PieceSymbol(glyph: vm.glyph(for: side, kind), side: side, size: 44)
+                PieceSymbol(kind: kind, side: side, size: 44)
             }
         .buttonStyle(PlainButtonStyle())
     }

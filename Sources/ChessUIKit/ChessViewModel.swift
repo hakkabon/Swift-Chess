@@ -48,6 +48,10 @@ class ChessViewModel: ObservableObject {
     @Published var boardSize: BoardSize = .medium
     @Published var showCoordinates: Bool = true
 
+    // Transient state while a piece is being dragged.
+    @Published var dragPiece: (Side, PieceKind)?
+    @Published var dragPoint: CGPoint = .zero
+
     // Squares in top-left -> bottom-right display order.
     let displayOrder: [UInt8]
 
@@ -182,6 +186,59 @@ class ChessViewModel: ObservableObject {
         return state?.turn != humanColor
     }
 
+    // MARK: - Drag & drop
+
+    /// Whether the given side's piece may be picked up and dragged by the user.
+    func canDrag(_ side: Side) -> Bool {
+        guard !thinking, !gameOver, let s = state else { return false }
+        if mode == .computerVsComputer { return false }
+        if mode == .humanVsAI, s.turn != humanColor { return false }
+        return side == s.turn
+    }
+
+    func beginDrag(from: UInt8, piece: (Side, PieceKind), at point: CGPoint) {
+        guard canDrag(piece.0) else { return }
+        selected = from
+        legalTargets = []
+        dragPiece = piece
+        dragPoint = point
+    }
+
+    func endDrag(to: UInt8) {
+        let from = selected
+        dragPiece = nil
+        selected = nil
+        legalTargets = []
+        guard let from = from else { return }
+        if to != from {
+            tryMove(from: from, to: to)
+        }
+    }
+
+    /// Attempt a move from `from` to `to` (used by drag & drop). Illegal or
+    /// non-feasible moves are ignored; promotions surface the chooser.
+    func tryMove(from: UInt8, to: UInt8) {
+        guard !thinking, !gameOver else { return }
+        guard let s = state else { return }
+        if mode == .computerVsComputer { return }
+        if mode == .humanVsAI, s.turn != humanColor { return }
+        guard let piece = board[from], piece.0 == s.turn else { return }
+        guard let target = game.legalMoves()
+            .first(where: { $0.fromSquare == from && $0.toSquare == to })
+        else { return }
+
+        selected = nil
+        legalTargets = []
+        if target.promotion != nil {
+            // Defer to the promotion sheet for the destination square.
+            selected = from
+            legalTargets = game.legalMoves()
+                .filter { $0.fromSquare == from && $0.toSquare == to }
+        } else {
+            performMove(target)
+        }
+    }
+
     private func performMove(_ move: MoveData) {
         do {
             _ = try game.makeMove(
@@ -255,24 +312,6 @@ class ChessViewModel: ObservableObject {
             return String(format: "+%.2f", pawns)
         } else {
             return String(format: "%.2f", pawns)
-        }
-    }
-
-    func glyph(for side: Side, _ kind: PieceKind) -> String {
-        // Always use the solid (filled) chess glyphs; the side only changes the
-        // tint, so pieces render as fully opaque black/white with no transparency.
-        let solid = ["♟", "♞", "♝", "♜", "♛", "♚"]
-        return solid[kindIndex(kind)]
-    }
-
-    private func kindIndex(_ kind: PieceKind) -> Int {
-        switch kind {
-        case .pawn: return 0
-        case .knight: return 1
-        case .bishop: return 2
-        case .rook: return 3
-        case .queen: return 4
-        case .king: return 5
         }
     }
 }

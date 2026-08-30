@@ -22,11 +22,12 @@ let package = Package(
             name: "EngineFFI",
             path: "Frameworks/ChessEngineKitFFI.xcframework"
         ),
-        .target(
-            name: "ChessUIKit",
-            dependencies: ["SwiftChess", "ChessEngineKit"],
-            path: "Sources/ChessUIKit"
-        ),
+                .target(
+                    name: "ChessUIKit",
+                    dependencies: ["SwiftChess", "ChessEngineKit"],
+                    path: "Sources/ChessUIKit",
+                    resources: [.process("Resources")]
+                ),
         .executableTarget(
             name: "ChessUI",
             dependencies: ["ChessUIKit"],
