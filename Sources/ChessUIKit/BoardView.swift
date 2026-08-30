@@ -11,14 +11,14 @@ struct PieceSymbol: View {
     private var asset: String {
         let base: String
         switch kind {
-        case .pawn: base = "piece_pawn"
-        case .knight: base = "piece_knight"
-        case .bishop: base = "piece_bishop"
-        case .rook: base = "piece_rook"
-        case .queen: base = "piece_queen"
-        case .king: base = "piece_king"
+        case .pawn: base = "pawn"
+        case .knight: base = "knight"
+        case .bishop: base = "bishop"
+        case .rook: base = "rook"
+        case .queen: base = "queen"
+        case .king: base = "king"
         }
-        // Expect separate image sets per color, e.g. "piece_pawn_white", "piece_pawn_black"
+        // Expect separate image sets per color, e.g. "pawn_white", "pawn_black"
         let suffix = side == .white ? "_white" : "_black"
         return base + suffix
     }
