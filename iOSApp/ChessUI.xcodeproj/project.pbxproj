@@ -1,0 +1,109 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		100000000000000000000001 /* ChessUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000002 /* ChessUIApp.swift */; };
+		100000000000000000000003 /* ChessUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 100000000000000000000004 /* ChessUIKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		100000000000000000000002 /* ChessUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessUIApp.swift; sourceTree = "<group>"; };
+		100000000000000000000005 /* ChessUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		100000000000000000000006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (100000000000000000000003 /* ChessUIKit in Frameworks */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		100000000000000000000007 = {
+			isa = PBXGroup;
+			children = (100000000000000000000008 /* ChessUI */, 100000000000000000000009 /* Products */,);
+			sourceTree = "<group>";
+		};
+		100000000000000000000008 /* ChessUI */ = {
+			isa = PBXGroup;
+			children = (100000000000000000000002 /* ChessUIApp.swift */,);
+			path = ChessUI;
+			sourceTree = "<group>";
+		};
+		100000000000000000000009 /* Products */ = {
+			isa = PBXGroup;
+			children = (100000000000000000000005 /* ChessUI.app */,);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		10000000000000000000000A /* ChessUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 10000000000000000000000B /* Build configuration list for PBXNativeTarget "ChessUI" */;
+			buildPhases = (10000000000000000000000C /* Sources */, 100000000000000000000006 /* Frameworks */, 10000000000000000000000D /* Resources */,);
+			buildRules = ();
+			dependencies = ();
+			name = ChessUI;
+			packageProductDependencies = (100000000000000000000004 /* ChessUIKit */,);
+			productName = ChessUI;
+			productReference = 100000000000000000000005 /* ChessUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		10000000000000000000000E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1650; LastUpgradeCheck = 1650; TargetAttributes = {10000000000000000000000A = {CreatedOnToolsVersion = 16.0; };};};
+			buildConfigurationList = 10000000000000000000000F /* Build configuration list for PBXProject "ChessUI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base,);
+			mainGroup = 100000000000000000000007;
+			packageReferences = (100000000000000000000010 /* XCLocalSwiftPackageReference "../" */,);
+			productRefGroup = 100000000000000000000009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (10000000000000000000000A /* ChessUI */,);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		10000000000000000000000D /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		10000000000000000000000C /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (100000000000000000000001 /* ChessUIApp.swift in Sources */,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		100000000000000000000011 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64; GCC_C_LANGUAGE_STANDARD = gnu17; GCC_OPTIMIZATION_LEVEL = 0; ONLY_ACTIVE_ARCH = YES; SDKROOT = iphoneos; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; }; name = Debug; };
+		100000000000000000000012 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_NS_ASSERTIONS = NO; "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64; GCC_C_LANGUAGE_STANDARD = gnu17; SDKROOT = iphoneos; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; VALIDATE_PRODUCT = YES; }; name = Release; };
+		100000000000000000000013 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Swift Chess"; INFOPLIST_KEY_UILaunchScreen_Generation = YES; IPHONEOS_DEPLOYMENT_TARGET = 16.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.example.SwiftChess; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 2; }; name = Debug; };
+		100000000000000000000014 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Swift Chess"; INFOPLIST_KEY_UILaunchScreen_Generation = YES; IPHONEOS_DEPLOYMENT_TARGET = 16.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.example.SwiftChess; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SUPPORTS_MACCATALYST = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 2; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		10000000000000000000000B /* Build configuration list for PBXNativeTarget "ChessUI" */ = {isa = XCConfigurationList; buildConfigurations = (100000000000000000000013 /* Debug */, 100000000000000000000014 /* Release */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		10000000000000000000000F /* Build configuration list for PBXProject "ChessUI" */ = {isa = XCConfigurationList; buildConfigurations = (100000000000000000000011 /* Debug */, 100000000000000000000012 /* Release */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		100000000000000000000010 /* XCLocalSwiftPackageReference "../" */ = {isa = XCLocalSwiftPackageReference; relativePath = ../; };
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		100000000000000000000004 /* ChessUIKit */ = {isa = XCSwiftPackageProductDependency; package = 100000000000000000000010 /* XCLocalSwiftPackageReference "../" */; productName = ChessUIKit; };
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 10000000000000000000000E /* Project object */;
+}

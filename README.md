@@ -62,7 +62,7 @@ Swift-Chess/
 | --- | --- | --- |
 | `SwiftChess` | library | Re-exports `ChessEngineKit` (the engine FFI). Import this to use the engine types. |
 | `ChessUIKit` | library | The shared SwiftUI board, side panel, and `ContentView`. Used by both apps. |
-| `ChessUI` | executable | The macOS SwiftUI chess application. |
+| `ChessUIMac` | executable | The macOS SwiftUI chess application. |
 
 The iPadOS/iOS app is **not** a SwiftPM product — it lives in the `iOSApp/`
 Xcode project and depends on the `ChessUIKit` package product.
@@ -75,7 +75,7 @@ Xcode project and depends on the `ChessUIKit` package product.
 
 ```bash
 swift build                  # build everything
-swift run ChessUI            # launch the macOS app
+swift run ChessUIMac         # launch the macOS app
 ```
 
 ### iPadOS / iOS
@@ -88,8 +88,10 @@ open iOSApp/ChessUI.xcodeproj
 
 The project references this package locally (`../`), so Xcode resolves
 `ChessUIKit` (and transitively the Rust XCFramework) automatically. Pick an
-iPad or iPhone destination and press Run. The simulator runs on Apple Silicon
-Macs (no x86_64 iOS simulator slice is shipped).
+iPad destination, select your development team and a unique bundle identifier
+in the **ChessUI** target's Signing & Capabilities settings, then press Run.
+The simulator runs on Apple Silicon Macs; the bundled Rust simulator library
+contains arm64 only, so x86_64 is excluded by the project configuration.
 
 ---
 

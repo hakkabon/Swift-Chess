@@ -10,6 +10,8 @@ xcuserdata
 *.xcscmblueprint
 /default.profraw
 *.xcodeproj
+!iOSApp/ChessUI.xcodeproj/
+!iOSApp/ChessUI.xcodeproj/project.pbxproj
 Utilities/Docker/*.tar.gz
 .swiftpm
 Package.resolved
