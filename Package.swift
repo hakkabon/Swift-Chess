@@ -3,18 +3,11 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftChess",
-    platforms: [
-        .macOS(.v13),
-        // iPadOS uses SwiftPM's iOS platform declaration.
-        .iOS(.v16),
-    ],
+    platforms: [.macOS(.v13), .iOS(.v14)],
     products: [
         .library(name: "SwiftChess", targets: ["SwiftChess"]),
         .library(name: "ChessUIKit", targets: ["ChessUIKit"]),
-        // SwiftPM executables are suitable for the macOS launcher. The iPad
-        // application bundle is defined by iOSApp/ChessUI.xcodeproj and links
-        // the ChessUIKit library product above.
-        .executable(name: "ChessUIMac", targets: ["ChessUIMac"]),
+        .executable(name: "ChessUI", targets: ["ChessUI"]),
     ],
     targets: [
         .target(
@@ -36,7 +29,7 @@ let package = Package(
             resources: [.process("Resources")]
         ),
         .executableTarget(
-            name: "ChessUIMac",
+            name: "ChessUI",
             dependencies: ["ChessUIKit"],
             path: "Sources/ChessUI"
         ),
